@@ -2,6 +2,7 @@ import streamlit as st
 import webbrowser
 import pandas as pd
 from datetime import datetime
+import os
 
 # Set the page configuration
 st.set_page_config(
@@ -10,9 +11,12 @@ st.set_page_config(
     layout="centered",
 )
 
+repo_root = os.path.dirname(os.path.abspath(__file__))
+data_path = os.path.join(repo_root, "datasets", "CLEAN_FIFA23_official_data.csv")
+
 # Load the data if it's not already loaded
 if "data" not in st.session_state:
-    df_data = pd.read_csv("datasets/CLEAN_FIFA23_official_data.csv", index_col=0)
+    df_data = pd.read_csv(data_path, index_col=0)
     df_data = df_data[df_data["Contract Valid Until"] >= datetime.today().year] # Filter out players with expired contracts
     df_data = df_data[df_data["Value(£)"] > 0] # Filter out players with zero value
     df_data = df_data.sort_values(by="Overall", ascending=False) # Sort by overall rating
